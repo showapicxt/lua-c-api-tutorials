@@ -1,35 +1,12 @@
 #include <stdio.h>
 #include "lua.h"
 #include "lauxlib.h"
+#include "stackdump.h"
 
-static void stackDump(lua_State *L)
-{
-	int i;
-	int top = lua_gettop(L);
 
-	for(i = 1; i <= top; i++) {
-		int t = lua_type(L, i);
-		switch(t) {
-			case LUA_TNIL:
-				printf("nil");
-				break;
-			case LUA_TBOOLEAN:
-				printf(lua_toboolean(L, i) ? "true" : "false");
-				break;
-			case LUA_TNUMBER:
-				printf("%g", lua_tonumber(L, i));
-				break;
-			case LUA_TSTRING:
-				printf("%s", lua_tostring(L, i));
-				break;
 
-			default:
-				printf("%s", lua_typename(L, t));
-		}
-		printf(" ");
-	}
-	printf("\n\n");
-}
+
+//cc -o first 02_stack.c -I /usr/local/openresty/luajit/include/luajit-2.1 -llua-5.1  -lm && ./first
 
 int main(void)
 {
@@ -39,26 +16,33 @@ int main(void)
 	lua_pushnumber(L, 10.011);
 	lua_pushstring(L, "hello");
 	lua_pushnil(L);
+	printf("head    tail  \n\n" );
+	printf("%d %d %d",  1,2,3);
+	printf("\n\n");
 
-	stackDump(L);
+	stackDump(L,"");
 
 	lua_pushvalue(L, 1);	//将索引为1的元素压入栈顶
-	stackDump(L);
+	printf("%s",  "将索引为1的元素压入栈顶 :");
+	stackDump(L,"");
+
 
 	lua_settop(L, 4);	//设置栈顶为4
-	stackDump(L);
+	printf("%s",  "设置栈顶为4 :");
+	stackDump(L,"");
 
 	lua_insert(L, 3);	//移动栈顶元素到3
-	stackDump(L);
+	printf("%s",  "移动栈顶元素到3 :");
+	stackDump(L,"");
 
 	lua_replace(L, 3);	//将栈顶元素移动到3位置，弹出栈顶元素
-	stackDump(L);
+	printf("%s",  "将栈顶元素移动到3位置，弹出栈顶元素 :");
+	stackDump(L,"");
 
-	lua_copy(L, 2, 3);	//将索引为2的元素复制到3位置
-	stackDump(L);
 
-	lua_pop(L, 3);	//剩余3个元素出栈
-	stackDump(L);
+	lua_pop(L, 1);	//从栈尾弹出几个
+	printf("%s",  "栈尾弹出1个 :");
+	stackDump(L,"");
 
 	lua_close(L);
 	return 0;

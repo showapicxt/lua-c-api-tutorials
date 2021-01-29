@@ -1,1 +1,3 @@
-io.write("This is comming from lua\n")
+print("dddddddddddddddddd")
+
+io.write("This is comming02222000 from lua\n")

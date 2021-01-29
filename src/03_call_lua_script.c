@@ -4,18 +4,18 @@
 #include "lauxlib.h"
 #include "lualib.h"
 
+#include "stackdump.h"
+
+//cc -o first 03_call_lua_script.c -I /usr/local/openresty/luajit/include/luajit-2.1 -llua-5.1  -lm && ./first
 int main(void)
 {
 	lua_State *L = luaL_newstate();
 	luaL_openlibs(L);
-
-	if(luaL_loadfile(L, "call_lua_script.lua"))
-		err_exit(L, "luaL_loadfile failed.\n");
-
 	printf("In C, calling Lua\n");
+	if(luaL_dofile(L, "call_lua_script.lua"))
+		err_exit(L, "luaL_loadfile failed.\n");
+    stackDump(L,"dump pos1");
 
-	if(lua_pcall(L, 0, 0, 0))
-		err_exit(L, "lua_pcall() failed.", lua_tostring(L, -1));
 
 	printf("Back in C again\n");
 
