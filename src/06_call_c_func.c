@@ -26,8 +26,9 @@ static const struct luaL_Reg libs [] = {
 	{NULL, NULL}
 };
 
-int luaopen_power(lua_State *L)
+int luaopen_libpower(lua_State *L)
 {
-	luaL_newlib(L, libs);
+    luaL_register(L,"libpower",libs);
+
 	return 1;
 }
